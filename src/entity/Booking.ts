@@ -5,18 +5,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from "typeorm";
-
-/**
- * @export
- * @enum {string}
- */
-enum BookingStatusEnum {
-  Pending = "pending",
-  Open = "open",
-  Closed = "closed",
-  Cancelled = "cancelled",
-  Noshow = "noshow",
-}
+import { BookingStatusEnum } from '../enums/booking-status-enum';
 
 @Entity()
 export class Booking {
