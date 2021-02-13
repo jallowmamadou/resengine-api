@@ -72,7 +72,7 @@ describe("Test API Endpoints", function () {
             .catch(done);
     });
     it("should GET /api/hotels/search", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var mock, response;
+        var mock, response, responseBody;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -93,7 +93,12 @@ describe("Test API Endpoints", function () {
                     return [4 /*yield*/, supertest_1.agent(app_1.app).get("/api/hotels/search?lat=48.1985197297971=&lng=11.512284425816313")];
                 case 1:
                     response = _a.sent();
-                    console.log(response.body);
+                    responseBody = response.body;
+                    chai_1.expect(responseBody).to.have.property("data");
+                    chai_1.expect(responseBody).to.have.property("links");
+                    chai_1.expect(responseBody).to.have.property("meta");
+                    chai_1.expect(responseBody.data).length.to.be.gte(2);
+                    mock.reset();
                     return [2 /*return*/];
             }
         });

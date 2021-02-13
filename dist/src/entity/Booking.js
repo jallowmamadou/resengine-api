@@ -11,18 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Booking = void 0;
 var typeorm_1 = require("typeorm");
-/**
- * @export
- * @enum {string}
- */
-var BookingStatusEnum;
-(function (BookingStatusEnum) {
-    BookingStatusEnum["Pending"] = "pending";
-    BookingStatusEnum["Open"] = "open";
-    BookingStatusEnum["Closed"] = "closed";
-    BookingStatusEnum["Cancelled"] = "cancelled";
-    BookingStatusEnum["Noshow"] = "noshow";
-})(BookingStatusEnum || (BookingStatusEnum = {}));
+var booking_status_enum_1 = require("../enums/booking-status-enum");
 var Booking = /** @class */ (function () {
     function Booking() {
     }
@@ -49,8 +38,8 @@ var Booking = /** @class */ (function () {
     __decorate([
         typeorm_1.Column({
             type: "enum",
-            enum: BookingStatusEnum,
-            default: BookingStatusEnum.Pending,
+            enum: booking_status_enum_1.BookingStatusEnum,
+            default: booking_status_enum_1.BookingStatusEnum.Pending,
         }),
         __metadata("design:type", String)
     ], Booking.prototype, "status", void 0);
