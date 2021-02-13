@@ -1,0 +1,391 @@
+openapi: 3.0.0
+info:
+  title: Reservation engine
+  description: This is a restful api for searching for hotels near you. You can also
+    make reservations on a hotel
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: sulsiram@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+servers:
+  - url: /
+tags:
+  - name: Hotels
+    description: Finding hotels
+    externalDocs:
+      description: Find hotels
+      url: http://api.resengine.com
+paths:
+  /hotels/search:
+    get:
+      tags:
+        - Hotels
+      summary: Find hotels by cordinates
+      description: Search for hotels using longitude and latiture. The search is restricted
+        to 1500m of the given cordinates
+      operationId: search
+      parameters:
+        - name: lat
+          in: query
+          description: The latitude for the search
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: lng
+          in: query
+          description: The longitude for the search
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Collection of hotels near by
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessHotelsResponse'
+        "400":
+          description: User error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-swagger-router-controller: Hotels
+  /hotels/{hotel_id}/bookings:
+    get:
+      tags:
+        - Hotels
+      summary: Find bookings for a given hotel
+      description: Returns a collection of bookings
+      operationId: index
+      parameters:
+        - name: hotel_id
+          in: path
+          description: ID of the hotel in question
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Collection of hotels near by
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingCollectionResponse'
+        "400":
+          description: Invalid request data was supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-swagger-router-controller: Hotels
+    post:
+      tags:
+        - Hotels
+      description: Creates a new booking for a given hotel
+      operationId: hotelsHotel_idBookingsPOST
+      parameters:
+        - name: hotel_id
+          in: path
+          description: ID of the hotel in question
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: Optional description in *Markdown*
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "201":
+          description: Successfully created a booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        "400":
+          description: Invalid request data was supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-swagger-router-controller: Hotels
+components:
+  schemas:
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the hotel
+        hotel_id:
+          type: string
+          description: ID of the hotel in question
+        main_guest_name:
+          type: string
+          description: Name of the person making the reservation
+        main_guest_email:
+          type: string
+          description: Name of the person making the reservation email address
+        status:
+          type: string
+          description: Updated status of the pet
+          enum:
+            - pending
+            - open
+            - closed
+            - cancelled
+            - noshow
+        booking_code:
+          type: string
+          description: A unique public string to identify the booking
+        arrival_date:
+          type: string
+          description: Date of arrival
+        departure_date:
+          type: string
+          description: Date of departure
+        created_at:
+          type: string
+          description: When this record was created
+        updated_at:
+          type: string
+          description: When this record was last updated
+        deleted_at:
+          type: string
+          description: When this record was deleted
+      example:
+        booking_code: booking_code
+        main_guest_email: main_guest_email
+        updated_at: updated_at
+        main_guest_name: main_guest_name
+        hotel_id: hotel_id
+        departure_date: departure_date
+        created_at: created_at
+        id: id
+        arrival_date: arrival_date
+        deleted_at: deleted_at
+        status: pending
+    Hotel:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the hotel
+        name:
+          type: string
+          description: Name of the hotel
+        place_id:
+          type: string
+          description: Google place id
+        vicinity:
+          type: string
+          description: The vicinity of the hotel
+        opening_hours:
+          type: object
+          description: opening hours of the hotel
+        icon:
+          type: string
+          description: Logo of the hotel
+        geometry:
+          type: object
+          description: Longitude and latitute of the hotel
+        address:
+          type: string
+          description: The full address of the hotel
+      example:
+        address: address
+        name: name
+        opening_hours: {}
+        icon: icon
+        vicinity: vicinity
+        geometry: {}
+        id: id
+        place_id: place_id
+    SuccessHotelsResponse:
+      required:
+        - id
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hotel'
+        meta:
+          $ref: '#/components/schemas/SuccessHotelsResponse_meta'
+        links:
+          $ref: '#/components/schemas/SuccessHotelsResponse_links'
+      description: Collection of hotels
+      example:
+        data:
+          - address: address
+            name: name
+            opening_hours: {}
+            icon: icon
+            vicinity: vicinity
+            geometry: {}
+            id: id
+            place_id: place_id
+          - address: address
+            name: name
+            opening_hours: {}
+            icon: icon
+            vicinity: vicinity
+            geometry: {}
+            id: id
+            place_id: place_id
+        meta:
+          next_page_id: next_page_id
+        links:
+          self: self
+    BookingResponse:
+      required:
+        - id
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Booking'
+        meta:
+          $ref: '#/components/schemas/SuccessHotelsResponse_meta'
+        links:
+          $ref: '#/components/schemas/SuccessHotelsResponse_links'
+      description: Booking request response
+      example:
+        data:
+          booking_code: booking_code
+          main_guest_email: main_guest_email
+          updated_at: updated_at
+          main_guest_name: main_guest_name
+          hotel_id: hotel_id
+          departure_date: departure_date
+          created_at: created_at
+          id: id
+          arrival_date: arrival_date
+          deleted_at: deleted_at
+          status: pending
+        meta:
+          next_page_id: next_page_id
+        links:
+          self: self
+    ErrorResponse:
+      type: object
+      properties:
+        error_message:
+          type: string
+        human_message:
+          type: string
+        error_code:
+          type: number
+      description: Fail to perform an action
+    BookingCollectionResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Booking'
+        meta:
+          $ref: '#/components/schemas/SuccessHotelsResponse_meta'
+        links:
+          $ref: '#/components/schemas/SuccessHotelsResponse_links'
+      description: Collection of bookings
+      example:
+        data:
+          - booking_code: booking_code
+            main_guest_email: main_guest_email
+            updated_at: updated_at
+            main_guest_name: main_guest_name
+            hotel_id: hotel_id
+            departure_date: departure_date
+            created_at: created_at
+            id: id
+            arrival_date: arrival_date
+            deleted_at: deleted_at
+            status: pending
+          - booking_code: booking_code
+            main_guest_email: main_guest_email
+            updated_at: updated_at
+            main_guest_name: main_guest_name
+            hotel_id: hotel_id
+            departure_date: departure_date
+            created_at: created_at
+            id: id
+            arrival_date: arrival_date
+            deleted_at: deleted_at
+            status: pending
+        meta:
+          next_page_id: next_page_id
+        links:
+          self: self
+    body:
+      required:
+        - arrival_date
+        - departure_date
+        - hotel_id
+        - main_guest_email
+        - main_guest_name
+      properties:
+        hotel_id:
+          type: string
+          description: ID of the hotel in question
+        main_guest_name:
+          type: string
+          description: Name of the person making the reservation
+          example: john doe
+        main_guest_email:
+          type: string
+          description: Name of the person making the reservation email address
+          format: email
+        arrival_date:
+          type: string
+          description: Date of arrival
+          format: date-time
+        departure_date:
+          type: string
+          description: Date of departure
+          format: date-time
+    SuccessHotelsResponse_meta:
+      type: object
+      properties:
+        next_page_id:
+          type: string
+      example:
+        next_page_id: next_page_id
+    SuccessHotelsResponse_links:
+      type: object
+      properties:
+        self:
+          type: string
+      example:
+        self: self

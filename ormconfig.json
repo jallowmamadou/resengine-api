@@ -1,0 +1,18 @@
+{
+  "type": "mysql",
+  "host": "svc-49d861a4-76ef-4d89-a7bb-d38a2a9316d8-ddl.aws-virginia-1.db.memsql.com",
+  "port": 3306,
+  "username": "admin",
+  "password": "o%fhY@IRa9Aq9euuwJrCnlTAcVr*",
+  "database": "resengine_db",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["src/entity/**/*.ts"],
+  "migrations": ["src/migration/**/*.ts"],
+  "subscribers": ["src/subscriber/**/*.ts"],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration",
+    "subscribersDir": "src/subscriber"
+  }
+}
