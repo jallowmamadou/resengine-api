@@ -16,11 +16,7 @@ export class HotelBookingController {
     try {
       return res
         .status(200)
-        .json(
-          BookingResource.collection(
-            await Container.get(HotelService).findBookings(req.params.hotelId)
-          )
-        );
+        .json(BookingResource.collection(await Container.get(HotelService).findBookings(req.params.hotelId)));
     } catch (error) {
       res
         .status(500)
